@@ -6,7 +6,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".add_work.AddFileActivity">
+    tools:context=".add_work.AddFileActivity"
+    android:background="#D6EEF1">
 
     <Button
         android:id="@+id/addImageID"

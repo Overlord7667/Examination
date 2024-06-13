@@ -2,18 +2,15 @@ package com.betelgeuse.corp.examination.add_work
 
 import android.Manifest
 import android.app.Activity
-import android.content.ContentUris
 import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.provider.Settings
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
@@ -41,15 +38,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.apache.commons.io.output.ByteArrayOutputStream
-import org.apache.poi.util.Units
 import org.apache.poi.xwpf.usermodel.XWPFDocument
-import java.io.ByteArrayInputStream
+import org.apache.poi.util.Units
 import java.io.File
-import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
-import java.io.InputStream
 
 class TakerWork : AppCompatActivity() {
 
@@ -106,7 +99,7 @@ class TakerWork : AppCompatActivity() {
 
         val exportToWordButton: ImageButton = findViewById(R.id.tables)
         exportToWordButton.setOnClickListener {
-            exportDataToWord()
+            saveDocumentToExternalStorage()
             Log.d("TakerWork", "Кнопка работает")
         }
 
@@ -125,30 +118,91 @@ class TakerWork : AppCompatActivity() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), WRITE_EXTERNAL_STORAGE_REQUEST_CODE)
         }
+
+        checkAndRequestPermissions()
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            READ_EXTERNAL_STORAGE_REQUEST_CODE, WRITE_EXTERNAL_STORAGE_REQUEST_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d("TakerWork", "Разрешение было предоставлено")
-                } else {
-                    Toast.makeText(this, "Разрешение не было предоставлено", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
-
-    private fun exportDataToWord() {
+    private fun saveDocumentToExternalStorage() {
         if (::adapter.isInitialized) {
             val doc = XWPFDocument()
             val dataToExport = collectDataForExport()
             val photos = adapter.getItems()
             addDataToDocument(doc, dataToExport, photos)
-            saveDocument(doc)
+
+            // Сохранение документа в зависимости от версии API
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                saveDocumentToExternalStorageQ(doc)
+            } else {
+                saveDocument(doc)
+            }
         } else {
             // Обработка ситуации, когда adapter не инициализирован
+        }
+    }
+    private fun saveDocumentToExternalStorageQ(doc: XWPFDocument) {
+        val resolver = contentResolver
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, "exported_data.docx")
+            put(MediaStore.MediaColumns.MIME_TYPE, "application/msword")
+            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS + "/WordDocuments")
+        }
+
+        val uri = resolver.insert(MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY), contentValues)
+        uri?.let {
+            try {
+                resolver.openOutputStream(it)?.use { outputStream ->
+                    doc.write(outputStream)
+                }
+                Toast.makeText(this, "Документ сохранен в ${uri.path}", Toast.LENGTH_SHORT).show()
+            } catch (e: IOException) {
+                e.printStackTrace()
+                Toast.makeText(this, "Ошибка при сохранении документа: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun checkAndRequestPermissions() {
+        val permissions = mutableListOf<String>()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+                val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
+                    data = Uri.parse("package:${applicationContext.packageName}")
+                }
+                startActivityForResult(intent, MANAGE_EXTERNAL_STORAGE_REQUEST_CODE)
+            }
+        } else {
+            // Запрос разрешений для чтения и записи внешнего хранилища
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+            }
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            }
+
+            // Если есть разрешения, запрашиваем их у пользователя
+            if (permissions.isNotEmpty()) {
+                ActivityCompat.requestPermissions(this, permissions.toTypedArray(), REQUEST_PERMISSIONS_CODE)
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_PERMISSIONS_CODE) {
+            val permissionsDenied = mutableListOf<String>()
+            for (i in grantResults.indices) {
+                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                    permissionsDenied.add(permissions[i])
+                }
+            }
+            if (permissionsDenied.isNotEmpty()) {
+                // Здесь можно добавить дополнительную логику в случае отказа в разрешении
+                Toast.makeText(this, "Необходимо предоставить разрешения", Toast.LENGTH_SHORT).show()
+            } else {
+                // Разрешения получены, можно продолжать работу с файлами
+                Toast.makeText(this, "Разрешения предоставлены", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -179,6 +233,7 @@ class TakerWork : AppCompatActivity() {
                     inputStream.copyTo(outputStream)
                 }
             }
+            // Получение URI с помощью FileProvider
             FileProvider.getUriForFile(this, "${packageName}.provider", destinationFile)
         } catch (e: IOException) {
             e.printStackTrace()
@@ -199,9 +254,11 @@ class TakerWork : AppCompatActivity() {
             val photoImageUri = photo.imageUri ?: continue
             try {
                 val uri = Uri.parse(photoImageUri)
+                Log.d("TakerWork", "Attempting to open InputStream for URI: $uri")
                 val localUri = copyFileToInternalStorage(uri) ?: continue
                 val inputStream = contentResolver.openInputStream(localUri)
                 if (inputStream != null) {
+                    Log.d("TakerWork", "Successfully opened InputStream for URI: $uri")
                     val pictureType = when (photoImageUri.substringAfterLast('.').lowercase()) {
                         "jpeg", "jpg" -> XWPFDocument.PICTURE_TYPE_JPEG
                         "png" -> XWPFDocument.PICTURE_TYPE_PNG
@@ -210,9 +267,9 @@ class TakerWork : AppCompatActivity() {
 
                     val imageFileName = localUri.lastPathSegment
                     run.addPicture(inputStream, pictureType, imageFileName, Units.toEMU(200.0), Units.toEMU(200.0))
-                    inputStream.close() // Don't forget to close the inputStream
+                    inputStream.close() // Не забывайте закрывать inputStream
                 } else {
-                    Log.d("TakerWork", "Не удалось открыть InputStream для $uri")
+                    Log.d("TakerWork", "Failed to open InputStream for URI: $uri")
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -222,40 +279,30 @@ class TakerWork : AppCompatActivity() {
     }
 
     private fun saveDocument(doc: XWPFDocument) {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), WRITE_EXTERNAL_STORAGE_REQUEST_CODE)
-            return
+        val fileName = "exported_data.docx"
+        val destinationDir = File(getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "WordDocuments")
+
+        if (!destinationDir.exists()) {
+            destinationDir.mkdirs()
         }
 
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, "exported_data.docx")
-            put(MediaStore.MediaColumns.MIME_TYPE, "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
-            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS)
-        }
+        val file = File(destinationDir, fileName)
 
-        val contentResolver = contentResolver
-        val uri = contentResolver.insert(MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL), contentValues)
-
-        uri?.let {
-            try {
-                contentResolver.openOutputStream(it).use { outputStream ->
-                    doc.write(outputStream)
-                    Toast.makeText(this, "Данные успешно выгружены в Word", Toast.LENGTH_SHORT).show()
-                    Log.d("TakerWork", "saveDocument: ${uri.toString()}")
-                }
-            } catch (e: IOException) {
-                e.printStackTrace()
-                Log.d("TakerWork", "Not saveDocument: ${uri.toString()}")
-                Toast.makeText(this, "Ошибка при выгрузке данных в Word: ${e.message}", Toast.LENGTH_SHORT).show()
+        try {
+            FileOutputStream(file).use { outputStream ->
+                doc.write(outputStream)
             }
-        } ?: run {
-            Toast.makeText(this, "Ошибка при создании файла", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Документ сохранен в ${file.absolutePath}", Toast.LENGTH_SHORT).show()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            Toast.makeText(this, "Ошибка при сохранении документа: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == ADD_FILE_REQUEST_CODE && resultCode == RESULT_OK) {
+
+        if (requestCode == ADD_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val comment = data?.getStringExtra("comment") ?: ""
             val imageUri = data?.getStringExtra("imageUri") ?: ""
 
@@ -266,22 +313,25 @@ class TakerWork : AppCompatActivity() {
                     cardId = cardViewModel.insertSync(newCard)
                 }
 
-                val newItem = PhotoEntity(cardId = cardId, comment = comment, imageUri = imageUri)
+                // Copy image to internal storage and get new URI
+                val newImageUri = copyFileToInternalStorage(Uri.parse(imageUri))
+                if (newImageUri != null) {
+                    val newItem = PhotoEntity(cardId = cardId, comment = comment, imageUri = newImageUri.toString())
 
-                Log.d("TakerWork", "Received comment: $comment")
-                Log.d("TakerWork", "Received imageUri: $imageUri")
+                    Log.d("TakerWork", "Received comment: $comment")
+                    Log.d("TakerWork", "Received imageUri: $newImageUri")
 
-                if (comment.isNotEmpty() || imageUri.isNotEmpty()) {
                     withContext(Dispatchers.Main) {
                         adapter.addItem(newItem)
                     }
-                }
 
-                photoDao.insert(newItem)
+                    photoDao.insert(newItem)
+                } else {
+                    Log.e("TakerWork", "Failed to copy image to internal storage")
+                }
             }
-        } else if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.data != null) {
+        } else if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
             selectedImageUri = data.data
-            // Предположительно, imageView - это ImageView для отображения выбранного изображения
             val imageView: ImageView = findViewById(R.id.imagePhoto)
             imageView.setImageURI(selectedImageUri)
         }
@@ -292,5 +342,7 @@ class TakerWork : AppCompatActivity() {
         const val WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 2
         const val READ_EXTERNAL_STORAGE_REQUEST_CODE = 3
         const val PICK_IMAGE_REQUEST = 4
+        const val MANAGE_EXTERNAL_STORAGE_REQUEST_CODE = 5
+        const val REQUEST_PERMISSIONS_CODE = 6
     }
 }

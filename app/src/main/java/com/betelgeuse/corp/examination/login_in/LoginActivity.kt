@@ -33,5 +33,6 @@ class LoginActivity : AppCompatActivity() {
     private fun navigateToListWorkActivity() {
         val intent = Intent(this, ListWork::class.java)
         startActivity(intent)
+        finish()
     }
 }

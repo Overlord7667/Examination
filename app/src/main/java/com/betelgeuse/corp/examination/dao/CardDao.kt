@@ -13,9 +13,6 @@ interface CardDao {
     @Query("SELECT * FROM cards")
     fun getAllCards(): LiveData<List<CardEntity>>
 
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    fun insert(card: CardEntity): Long
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertSync(card: CardEntity): Long
 

@@ -11,12 +11,8 @@ import androidx.room.Update
 
 @Dao
 interface PhotoDao {
-//    @Query("SELECT * FROM photos WHERE cardId = :cardId")
-//    fun getPhotosByCardId(cardId: Int): LiveData<List<PhotoEntity>>
-
     @Query("SELECT * FROM photos WHERE cardId = :cardId")
     @Transaction
-//    fun getPhotosByCardIdSync(cardId: Int): List<PhotoEntity>
     fun getPhotosByCardIdSync(cardId: Int): List<PhotoEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

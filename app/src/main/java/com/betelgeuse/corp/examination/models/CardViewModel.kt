@@ -21,6 +21,7 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
         repository = CardRepository(cardDao)
         allCards = repository.allCards
     }
+
     fun insertSync(card: CardEntity): Int {
         return repository.insertSync(card)
     }
