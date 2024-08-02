@@ -2,6 +2,7 @@ package com.betelgeuse.corp.examination.add_work
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -42,7 +43,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-class TakerWork : AppCompatActivity() {
+class TakerWork : AppCompatActivity(), PhotoAdapter.OnDeleteClickListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: PhotoAdapter
@@ -213,16 +214,27 @@ class TakerWork : AppCompatActivity() {
         }
     }
 
-//    override fun onDeleteItemClick(photo: PhotoEntity) {
-//        CoroutineScope(Dispatchers.IO).launch {
-//            val rowsDeleted = cardViewModel.deletePhoto(photo)
-//            withContext(Dispatchers.Main) {
-//                if (rowsDeleted > 0) {
-//                    adapter.removeItem(photo)
-//                }
-//            }
-//        }
-//    }
+    override fun onDeleteItemClick(photo: PhotoEntity) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val rowsDeleted = cardViewModel.deletePhoto(photo)
+            withContext(Dispatchers.Main) {
+                if (rowsDeleted > 0) {
+                    adapter.removeItem(photo)
+                }
+            }
+        }
+    }
+    override fun showDeleteConfirmationDialog(photo: PhotoEntity) {
+        AlertDialog.Builder(this)
+            .setTitle("Удалить")
+            .setMessage("Вы уверены, что хотите удалить этот элемент?")
+            .setPositiveButton("Удалить") { _, _ ->
+                // Если пользователь подтвердил удаление, вызываем onDeleteItemClick
+                onDeleteItemClick(photo)
+            }
+            .setNegativeButton("Отмена", null)
+            .show()
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

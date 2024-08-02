@@ -13,10 +13,11 @@ import com.betelgeuse.corp.examination.add_work.TakerWork
 import com.betelgeuse.corp.examination.dao.PhotoEntity
 import com.bumptech.glide.Glide
 
-class PhotoAdapter(private val onDeleteClick: TakerWork) : RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>() {
+class PhotoAdapter(private val onDeleteClickListener: OnDeleteClickListener) : RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>() {
 
-    interface OnItemClickListener {
+    interface OnDeleteClickListener {
         fun onDeleteItemClick(photo: PhotoEntity)
+        fun showDeleteConfirmationDialog(photo: PhotoEntity)
     }
 
     private val items = mutableListOf<PhotoEntity>()
@@ -86,9 +87,9 @@ class PhotoAdapter(private val onDeleteClick: TakerWork) : RecyclerView.Adapter<
                     .into(imageView2)
             }
 
-//            deleteButton.setOnClickListener {
-//                onDeleteClick(photo)
-//            }
+            deleteButton.setOnClickListener {
+                onDeleteClickListener.showDeleteConfirmationDialog(photo)
+            }
         }
     }
 }

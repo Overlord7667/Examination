@@ -22,5 +22,5 @@ interface PhotoDao {
     fun update(photo: PhotoEntity)
 
     @Delete
-    fun delete(photo: PhotoEntity)
+    fun delete(photo: PhotoEntity): Int
 }

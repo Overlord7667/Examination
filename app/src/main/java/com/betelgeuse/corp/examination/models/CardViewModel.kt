@@ -35,7 +35,9 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
         repository.delete(card)
     }
 
-    fun deletePhoto(photo: PhotoEntity): Int = repository.deletePhoto(photo)
+    fun deletePhoto(photo: PhotoEntity): Int {
+        return repository.deletePhoto(photo)
+    }
 
     fun loadCards() {
         repository.loadCards()
