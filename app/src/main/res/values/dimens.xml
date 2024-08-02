@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="system_ui_bottom_padding">46dp</dimen>
+</resources>

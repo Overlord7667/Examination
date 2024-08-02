@@ -12,7 +12,7 @@ android {
         applicationId = "com.betelgeuse.corp.examination"
         minSdk = 27
         targetSdk = 34
-        versionCode = 1
+        versionCode = 2
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -37,6 +37,16 @@ android {
 }
 
 dependencies {
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
+    val camerax_version = "1.4.0-beta02"
+    implementation("androidx.camera:camera-core:${camerax_version}")
+    implementation("androidx.camera:camera-camera2:${camerax_version}")
+    implementation("androidx.camera:camera-lifecycle:${camerax_version}")
+    implementation("androidx.camera:camera-video:${camerax_version}")
+    implementation("androidx.camera:camera-view:${camerax_version}")
+    implementation("androidx.camera:camera-mlkit-vision:${camerax_version}")
+    implementation("androidx.camera:camera-extensions:${camerax_version}")
+
     implementation (libs.androidx.room.runtime)
     kapt (libs.androidx.room.compiler)
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.0")

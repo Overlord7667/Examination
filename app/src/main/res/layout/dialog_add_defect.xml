@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <Spinner
+        android:id="@+id/spinnerProblem"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#D0D7FF"/>
+
+    <EditText
+        android:id="@+id/editTextCustomDefect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Введите дефект вручную"
+        android:layout_marginTop="28dp"/>
+
+    <Button
+        android:id="@+id/buttonAddDefect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Добавить дефект"
+        android:layout_marginTop="26dp"/>
+
+</LinearLayout>

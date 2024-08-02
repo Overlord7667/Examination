@@ -9,98 +9,194 @@
     tools:context=".add_work.AddFileActivity"
     android:background="#D6EEF1">
 
-    <Button
-        android:id="@+id/addImageID"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#888888"
-        android:text="Выбирете файл"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp">
 
-    <TextView
-        android:id="@+id/textID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Комментарий:"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="@+id/addImageID"
-        app:layout_constraintStart_toStartOf="@+id/addImageID"
-        app:layout_constraintTop_toBottomOf="@+id/addImageID"
-        android:layout_marginTop="20dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
-    <EditText
-        android:id="@+id/commentID"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        app:layout_constraintTop_toBottomOf="@+id/textID"
-        android:layout_margin="20dp"
-        android:hint="Добавьте комментарий"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textInform"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:gravity="center"
-        android:text="Выбранное изображение:"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="@+id/commentID"
-        app:layout_constraintStart_toStartOf="@+id/commentID"
-        app:layout_constraintTop_toBottomOf="@+id/commentID"
-        android:textStyle="bold"/>
+                <Button
+                    android:id="@+id/addImageID"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#888888"
+                    android:text="Добавить фото"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="15dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageViewID2" />
 
-    <ImageView
-        android:id="@+id/imageViewID"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="8dp"
-        android:background="#EFEFEF"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="@+id/textInform"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="@+id/textInform"
-        app:layout_constraintTop_toBottomOf="@+id/textInform" />
+                <EditText
+                    android:id="@+id/commentID"
+                    android:layout_width="337dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:hint="Комментарий к фото"
+                    android:paddingLeft="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
-    <Button
-        android:id="@+id/addFileInFile"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#EFEFEF"
-        app:layout_constraintEnd_toEndOf="@+id/textInform"
-        app:layout_constraintStart_toStartOf="@+id/textInform"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewID"
-        android:layout_marginTop="30dp"
-        android:text="Добавить файл"
-        android:textColor="#939393"
-        android:textSize="25sp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"/>
+                <Button
+                    android:id="@+id/addDefectButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Добавить дефект из списка по необходимости"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/commentID" />
 
-    <TextView
-        android:id="@+id/errorFilePhoto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ошибка загрузки фото"
-        android:textColor="#FF0000"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/addFileInFile"
-        app:layout_constraintStart_toStartOf="@+id/addFileInFile"
-        app:layout_constraintTop_toBottomOf="@+id/addFileInFile"
-        android:layout_marginTop="5dp"/>
+                <ImageView
+                    android:id="@+id/imageViewID"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
+                    android:background="#EFEFEF"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/addDefectButton"
+                    android:layout_marginTop="25dp"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone"/>
 
-    <Button
-        android:id="@+id/cancelButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="@+id/addFileInFile"
-        app:layout_constraintStart_toStartOf="@+id/addFileInFile"
-        app:layout_constraintTop_toBottomOf="@+id/errorFilePhoto"
-        android:layout_marginTop="40dp"
-        android:backgroundTint="#FF0000"
-        android:text="Отмена"
-        android:textSize="25dp"/>
+                <ImageView
+                    android:id="@+id/imageViewID2"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageViewID"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="#EFEFEF"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/textBuildSP"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="#EAECFA"
+                    android:gravity="center_vertical"
+                    android:hint="Выберете пункт СП"
+                    android:paddingLeft="5dp"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.497"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/addImageID"/>
+
+                <Button
+                    android:id="@+id/addSp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="Добавить пункт СП"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textBuildSP" />
+
+                <Spinner
+                    android:id="@+id/spinnerTypeRoom"
+                    android:layout_width="200dp"
+                    android:layout_height="50dp"
+                    android:background="#D0D7FF"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="40dp"/>
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Выберете тип комнаты"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/spinnerTypeRoom"/>
+
+                <Spinner
+                    android:id="@+id/spinnerObjectRoom"
+                    android:layout_width="200dp"
+                    android:layout_height="50dp"
+                    android:background="#D0D7FF"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView5"
+                    android:layout_marginTop="15dp"/>
+
+                <TextView
+                    android:id="@+id/textView7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Выберете тип объекта"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/spinnerObjectRoom"/>
+
+
+                <Spinner
+                    android:id="@+id/spinnerTypeWork"
+                    android:layout_width="200dp"
+                    android:layout_height="50dp"
+                    android:background="#D0D7FF"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView7"
+                    android:layout_marginTop="15dp"/>
+
+                <TextView
+                    android:id="@+id/textView8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Выберете тип работ"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/spinnerTypeWork" />
+
+                <Button
+                    android:id="@+id/addFileInFile"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#EFEFEF"
+                    android:text="Сохранить"
+                    android:textColor="#939393"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.405"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/addSp"
+                    android:layout_marginTop="10dp"/>
+
+                <Button
+                    android:id="@+id/cancelButton"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:backgroundTint="#FF0000"
+                    android:text="Отмена"
+                    android:textSize="25dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/addFileInFile"
+                    android:layout_marginBottom="10dp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

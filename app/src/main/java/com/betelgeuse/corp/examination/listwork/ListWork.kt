@@ -40,12 +40,16 @@ class ListWork : AppCompatActivity() {
             startActivityForResult(intent, REQUEST_CODE_ADD)
         }
 
-        adapter = CardAdapter(mutableListOf()) { selectedCard ->
-            val intent = Intent(this, TakerWork::class.java)
-            intent.putExtra("card_id", selectedCard.id)
-            intent.putExtra("card_title", selectedCard.title)
-            startActivityForResult(intent, REQUEST_CODE_EDIT)
-        }
+        adapter = CardAdapter(mutableListOf(),
+            { selectedCard ->
+                val intent = Intent(this, TakerWork::class.java)
+                intent.putExtra("card_id", selectedCard.id)
+                intent.putExtra("card_title", selectedCard.title)
+                startActivityForResult(intent, REQUEST_CODE_EDIT)
+            },
+            { selectedCard ->
+                cardViewModel.delete(selectedCard) // Удаление карточки
+            })
 
         val recyclerView: RecyclerView = findViewById(R.id.workID)
         recyclerView.layoutManager = LinearLayoutManager(this)

@@ -3,6 +3,7 @@ package com.betelgeuse.corp.examination.repository
 import androidx.lifecycle.LiveData
 import com.betelgeuse.corp.examination.dao.CardDao
 import com.betelgeuse.corp.examination.dao.CardEntity
+import com.betelgeuse.corp.examination.dao.PhotoEntity
 
 class CardRepository(private val cardDao: CardDao) {
     val allCards: LiveData<List<CardEntity>> = cardDao.getAllCards()
@@ -17,6 +18,10 @@ class CardRepository(private val cardDao: CardDao) {
 
     fun delete(card: CardEntity) {
         cardDao.delete(card)
+    }
+
+    fun deletePhoto(photo: PhotoEntity): Int {
+        return cardDao.deletePhoto(photo)
     }
 
     fun loadCards() {

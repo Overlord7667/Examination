@@ -8,6 +8,7 @@ import androidx.room.Room
 import com.betelgeuse.corp.examination.dao.CardDao
 import com.betelgeuse.corp.examination.dao.CardDatabase
 import com.betelgeuse.corp.examination.dao.CardEntity
+import com.betelgeuse.corp.examination.dao.PhotoEntity
 import com.betelgeuse.corp.examination.repository.CardRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,8 +35,9 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
         repository.delete(card)
     }
 
+    fun deletePhoto(photo: PhotoEntity): Int = repository.deletePhoto(photo)
+
     fun loadCards() {
-        // Загружаем карточки заново из репозитория
         repository.loadCards()
     }
 }

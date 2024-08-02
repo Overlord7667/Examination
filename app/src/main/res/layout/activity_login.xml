@@ -6,78 +6,77 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".login_in.LoginActivity"
     android:background="#D6EEF1">
 
     <View
         android:id="@+id/view"
         android:layout_width="wrap_content"
         android:layout_height="3dp"
-        android:layout_marginTop="20dp"
         android:background="#BDBABA"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="?attr/actionBarSize" />
 
     <TextView
         android:id="@+id/titleLog"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="Вход в личный кабинет"
+        android:text="Виды экспертиз"
         android:textSize="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view"
         android:textStyle="bold"/>
 
-    <EditText
-        android:id="@+id/loginIn"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:hint="Логин"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="200dp"
-        android:background="#EFEFEF"
-        android:lines="1"/>
+<!--    <EditText-->
+<!--        android:id="@+id/loginIn"-->
+<!--        android:layout_width="300dp"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:hint="Логин"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        android:layout_marginTop="200dp"-->
+<!--        android:background="#EFEFEF"-->
+<!--        android:lines="1"/>-->
 
-    <EditText
-        android:id="@+id/passIn"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:background="#EFEFEF"
-        android:layout_marginTop="10dp"
-        android:hint="Пароль"
-        app:layout_constraintEnd_toEndOf="@+id/loginIn"
-        app:layout_constraintStart_toStartOf="@+id/loginIn"
-        app:layout_constraintTop_toBottomOf="@+id/loginIn"
-        android:inputType="textPassword"
-        android:lines="1"/>
+<!--    <EditText-->
+<!--        android:id="@+id/passIn"-->
+<!--        android:layout_width="300dp"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:background="#EFEFEF"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:hint="Пароль"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/loginIn"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/loginIn"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/loginIn"-->
+<!--        android:inputType="textPassword"-->
+<!--        android:lines="1"/>-->
 
     <Button
         android:id="@+id/buttonLogin"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_height="80dp"
         android:backgroundTint="#888888"
-        android:text="Войти"
+        android:text="Строительная экспертиза"
         android:textSize="21sp"
-        app:layout_constraintEnd_toEndOf="@+id/passIn"
-        app:layout_constraintStart_toStartOf="@+id/passIn"
-        app:layout_constraintTop_toBottomOf="@+id/passIn" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleLog"
+        android:layout_marginTop="100dp"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ошибка входа"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="@+id/buttonLogin"
-        app:layout_constraintStart_toStartOf="@+id/buttonLogin"
-        app:layout_constraintTop_toBottomOf="@+id/buttonLogin"
-        android:layout_marginTop="20dp"
-        android:textStyle="bold"
-        android:textColor="#FF0600"/>
+    <!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Ошибка входа"-->
+<!--        android:textSize="20sp"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/buttonLogin"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/buttonLogin"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/buttonLogin"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:textStyle="bold"-->
+<!--        android:textColor="#FF0600"/>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

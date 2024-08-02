@@ -13,7 +13,7 @@ interface CardDao {
     @Query("SELECT * FROM cards")
     fun getAllCards(): LiveData<List<CardEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     fun insertSync(card: CardEntity): Long
 
     @Update
@@ -21,4 +21,7 @@ interface CardDao {
 
     @Delete
     fun delete(card: CardEntity)
+
+    @Delete
+    fun deletePhoto(photo: PhotoEntity): Int
 }
